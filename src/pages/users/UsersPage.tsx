@@ -23,12 +23,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Search, Plus, MoreHorizontal, User, Eye } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { useGetUsers } from "@/lib/api/queries/use-get-users";
-
-
+import { AddUserModal } from "@/components/modals/AddUserModal";
 
 const UsersPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isAddUserOpen, setIsAddUserOpen] = useState(false);
   const { toast } = useToast();
 
   const { data, isLoading, error } = useGetUsers({
@@ -62,6 +62,8 @@ const UsersPage = () => {
     switch(role) {
       case "admin":
         return <Badge className="bg-blue-500">Admin</Badge>;
+      case "superadmin":
+        return <Badge className="bg-indigo-500">Super Admin</Badge>;
       case "group_manager":
         return <Badge className="bg-purple-500">Group Manager</Badge>;
       case "student":
@@ -103,10 +105,18 @@ const UsersPage = () => {
               Manage all users and their access permissions
             </p>
           </div>
-          <Button className="bg-blue-600 hover:bg-blue-700">
+          <Button
+            className="bg-blue-600 hover:bg-blue-700"
+            onClick={() => setIsAddUserOpen(true)}
+          >
             <Plus className="mr-2 h-4 w-4" /> Add User
           </Button>
         </div>
+
+        <AddUserModal
+          isOpen={isAddUserOpen}
+          onClose={() => setIsAddUserOpen(false)}
+        />
 
         <div className="flex items-center gap-4">
           <div className="relative flex-1">
