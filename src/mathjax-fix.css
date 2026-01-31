@@ -1,0 +1,19 @@
+/* Fix for MathJax overlay blocking header */
+.MathJax, .MathJax_Display, .MathJax_Preview {
+  pointer-events: none !important;
+}
+
+.MathJax * {
+  pointer-events: none !important;
+}
+
+/* Ensure header is always clickable */
+header {
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 9999 !important;
+}
+
+header * {
+  pointer-events: auto !important;
+}
