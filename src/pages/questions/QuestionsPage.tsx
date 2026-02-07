@@ -74,6 +74,7 @@ export default function QuestionsPage() {
     questionType: filterType,
     searchTerm: searchTermDebounced,
     page: currentPage,
+    limit: 500,
   });
 
   const bulkDeleteMutation = useBulkDeleteQuestions();

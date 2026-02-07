@@ -47,6 +47,7 @@ export const useGetQuestions = ({
   questionType,
   searchTerm,
   page,
+  limit = 12,
   examIds,
   classIds,
   topicIds,
@@ -55,17 +56,18 @@ export const useGetQuestions = ({
   questionType?: "single" | "multiple" | "all";
   searchTerm?: string;
   page: number;
+  limit?: number;
   examIds?: string[];
   classIds?: string[];
   topicIds?: string[];
   subjectIds?: string[];
 }) => {
   return useQuery<GetQuestionsResponse>({
-    queryKey: ["get-questions", searchTerm, questionType, page, examIds, classIds, topicIds, subjectIds], // ✅ important for cache & invalidation
+    queryKey: ["get-questions", searchTerm, questionType, page, limit, examIds, classIds, topicIds, subjectIds], // ✅ important for cache & invalidation
     queryFn: async () => {
       const queryParams = new URLSearchParams();
       queryParams.append("page", page.toString());
-      queryParams.append("limit", "12");
+      queryParams.append("limit", limit.toString());
 
       if (questionType) {
         queryParams.append("questionType", questionType);

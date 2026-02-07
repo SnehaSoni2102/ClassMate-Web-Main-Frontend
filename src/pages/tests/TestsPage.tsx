@@ -50,6 +50,7 @@ export default function TestsPage() {
     searchTerm: searchTermDebounced,
     page: currentPage,
     type: filterType,
+    limit: 500,
   });
 
   // Debounce search term
