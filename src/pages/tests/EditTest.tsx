@@ -88,7 +88,8 @@ export default function EditTest() {
         startTime: t.startTime || "",
         endDate: t.endDate || "",
         endTime: t.endTime || "",
-        durationInMinutes: Math.floor(t.durationInMinutes / 60),
+        // durationInMinutes is stored in minutes on the server — don't divide by 60
+        durationInMinutes: t.durationInMinutes,
         totalMarks: t.totalMarks,
         marksPerQuestion: t.marksPerQuestion,
         negativeMarks: t.negativeMarks,
@@ -97,7 +98,8 @@ export default function EditTest() {
         languageOptions: t.languageOptions || LANGUAGE_OPTIONS,
         type: t.type,
         testType: t.testType || "free",
-        exam: t.exam || "",
+        // If API returns an exam object, store its id string instead
+        exam: typeof t.exam === "object" ? t.exam._id || "" : t.exam || "",
       });
 
       setSections(
@@ -273,7 +275,11 @@ export default function EditTest() {
       totalQuestions,
       totalSections: sections.length,
       totalMarks,
-      exam: test.exam, // Ensure exam field is included
+      // Ensure exam is sent as an id string (not an object)
+      exam:
+        typeof test.exam === "object"
+          ? test.exam._id || test.exam.value || ""
+          : test.exam,
       durationInMinutes: test.durationInMinutes,
       ...(test.type === "live"
         ? { endDate: test.endDate, endTime: test.endTime }
@@ -281,8 +287,16 @@ export default function EditTest() {
     };
     delete testBody._id;
     if (test.type === "mock") {
+      // Remove any live-specific date/time fields for mock tests
       delete testBody.endDate;
       delete testBody.endTime;
+      // Also remove startDate/startTime if empty or not applicable
+      if (!testBody.startDate) delete testBody.startDate;
+      if (!testBody.startTime) delete testBody.startTime;
+    } else {
+      // For live tests, if startDate/startTime are empty strings, remove them
+      if (!testBody.startDate) delete testBody.startDate;
+      if (!testBody.startTime) delete testBody.startTime;
     }
     const apiBody = {
       ...testBody,
