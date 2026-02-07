@@ -158,6 +158,7 @@ export default function TestsPage() {
               <TableRow>
                 <TableHead>Title</TableHead>
                 <TableHead>Type</TableHead>
+                <TableHead>Test Type</TableHead>
                 <TableHead>Questions</TableHead>
                 <TableHead>Sections</TableHead>
                 <TableHead>Duration</TableHead>
@@ -190,6 +191,19 @@ export default function TestsPage() {
                       <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200">
                         <Clock className="h-3 w-3 mr-1" />
                         Live
+                      </Badge>
+                    ) : (
+                      <span className="text-xs text-gray-400">-</span>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {test.testType === "paid" ? (
+                      <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
+                        Paid
+                      </Badge>
+                    ) : test.testType === "free" ? (
+                      <Badge variant="outline" className="bg-slate-50 text-slate-600 border-slate-200">
+                        Free
                       </Badge>
                     ) : (
                       <span className="text-xs text-gray-400">-</span>

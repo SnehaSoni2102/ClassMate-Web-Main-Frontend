@@ -18,6 +18,7 @@ export interface Test {
   createdAt: string;
   updatedAt: string;
   type?: "mock" | "live";
+  testType?: "free" | "paid";
   __v: number;
 }
 

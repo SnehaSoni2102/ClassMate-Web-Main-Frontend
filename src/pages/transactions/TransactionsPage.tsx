@@ -20,9 +20,12 @@ import {
   type Transaction,
 } from "@/lib/api/queries/use-get-transactions";
 
+const PER_PAGE = 50;
+
 export default function TransactionsPage() {
   const { data, isLoading, error } = useGetTransactions();
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Handle API error
   React.useEffect(() => {
@@ -50,33 +53,51 @@ export default function TransactionsPage() {
       return transactions;
     }
 
+    const term = searchTerm.trim().toLowerCase();
     return transactions.filter((transaction) => {
       const userData = getUserData(transaction);
 
       const matchesSearch =
         (userData?.Name
-          ? userData.Name.toLowerCase().includes(searchTerm.toLowerCase())
+          ? userData.Name.toLowerCase().includes(term)
           : false) ||
         (userData?.email
-          ? userData.email.toLowerCase().includes(searchTerm.toLowerCase())
+          ? userData.email.toLowerCase().includes(term)
           : false) ||
         (userData?.phoneNumber
-          ? userData.phoneNumber
-              .toLowerCase()
-              .includes(searchTerm.toLowerCase())
+          ? userData.phoneNumber.toLowerCase().includes(term)
           : false) ||
         (transaction?.description
-          ? transaction.description
-              .toLowerCase()
-              .includes(searchTerm.toLowerCase())
+          ? transaction.description.toLowerCase().includes(term)
           : false) ||
         (transaction?._id
-          ? transaction._id.toLowerCase().includes(searchTerm.toLowerCase())
+          ? transaction._id.toLowerCase().includes(term)
+          : false) ||
+        (transaction?.amount != null
+          ? String(transaction.amount).includes(searchTerm.trim())
           : false);
 
       return matchesSearch;
     });
   }, [data?.data, searchTerm]);
+
+  // Paginate filtered results (50 per page)
+  const totalFiltered = filteredTransactions.length;
+  const totalPages = Math.max(1, Math.ceil(totalFiltered / PER_PAGE));
+  const startIndex = (currentPage - 1) * PER_PAGE;
+  const paginatedTransactions = filteredTransactions.slice(
+    startIndex,
+    startIndex + PER_PAGE
+  );
+
+  // Reset to page 1 when search changes
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(Math.max(1, Math.min(page, totalPages)));
+  };
 
   // Format date for display
   const formatDate = (dateString: string) => {
@@ -109,7 +130,7 @@ export default function TransactionsPage() {
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
           <div className="w-full md:max-w-sm">
             <Input
-              placeholder="Search by user name, email, phone..."
+              placeholder="Search by amount, transaction ID, user, email, phone..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -156,7 +177,7 @@ export default function TransactionsPage() {
                     </TableCell>
                   </TableRow>
                 ))
-              ) : filteredTransactions.length === 0 ? (
+              ) : totalFiltered === 0 ? (
                 <TableRow>
                   <TableCell colSpan={7} className="text-center py-10">
                     <div className="flex flex-col items-center justify-center">
@@ -173,7 +194,7 @@ export default function TransactionsPage() {
                   </TableCell>
                 </TableRow>
               ) : (
-                filteredTransactions.map((transaction) => {
+                paginatedTransactions.map((transaction) => {
                   const userData = getUserData(transaction);
                   const isPaid = transaction?.status === "PAID";
                   const isCreated = transaction?.status === "CREATED";
@@ -298,6 +319,53 @@ export default function TransactionsPage() {
               )}
             </TableBody>
           </Table>
+
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between px-4 py-4 border-t">
+              <p className="text-sm text-muted-foreground">
+                Showing {startIndex + 1} to{" "}
+                {Math.min(startIndex + PER_PAGE, totalFiltered)} of{" "}
+                {totalFiltered} transactions
+              </p>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={currentPage <= 1}
+                  onClick={() => handlePageChange(1)}
+                >
+                  First
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={currentPage <= 1}
+                  onClick={() => handlePageChange(currentPage - 1)}
+                >
+                  Previous
+                </Button>
+                <span className="text-sm text-muted-foreground">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={currentPage >= totalPages}
+                  onClick={() => handlePageChange(currentPage + 1)}
+                >
+                  Next
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={currentPage >= totalPages}
+                  onClick={() => handlePageChange(totalPages)}
+                >
+                  Last
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </AdminLayout>
