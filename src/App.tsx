@@ -26,6 +26,13 @@ import CreateAllIndiaTest from "./pages/tests/CreateAllIndiaTest";
 import EditTest from "./pages/tests/EditTest";
 import TestPreview from "./pages/tests/TestPreview";
 
+// Quiz Management Pages
+import QuizzesPage from "./pages/quizzes/QuizzesPage";
+import CreateQuiz from "./pages/quizzes/CreateQuiz";
+import QuizDetail from "./pages/quizzes/QuizDetail";
+import EditQuiz from "./pages/quizzes/EditQuiz";
+import QuizPreview from "./pages/quizzes/QuizPreview";
+
 // Question Management Pages
 import QuestionsPage from "./pages/questions/QuestionsPage";
 import QuestionDetail from "./pages/questions/QuestionDetail";
@@ -187,6 +194,48 @@ const App = () => {
                   element={
                     <ProtectedRoute allowedRoles={["admin", "superadmin"]}>
                       <EditTest />
+                    </ProtectedRoute>
+                  }
+                />
+
+                {/* Quizzes Routes */}
+                <Route
+                  path="/quizzes"
+                  element={
+                    <ProtectedRoute allowedRoles={["admin", "superadmin"]}>
+                      <QuizzesPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/quizzes/create"
+                  element={
+                    <ProtectedRoute allowedRoles={["admin", "superadmin"]}>
+                      <CreateQuiz />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/quizzes/:id/edit"
+                  element={
+                    <ProtectedRoute allowedRoles={["admin", "superadmin"]}>
+                      <EditQuiz />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/quizzes/:id/preview"
+                  element={
+                    <ProtectedRoute allowedRoles={["admin", "superadmin"]}>
+                      <QuizPreview />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/quizzes/:id"
+                  element={
+                    <ProtectedRoute allowedRoles={["admin", "superadmin"]}>
+                      <QuizDetail />
                     </ProtectedRoute>
                   }
                 />

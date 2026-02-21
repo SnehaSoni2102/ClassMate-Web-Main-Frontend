@@ -17,6 +17,7 @@ import {
   Atom,
   SquareChartGantt,
   Megaphone,
+  ClipboardList,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NavItem } from "./types/NavItem.types";
@@ -49,6 +50,12 @@ const navItems: NavItem[] = [
     title: "Tests",
     href: "/tests",
     icon: FileText,
+    roles: ["admin", "superadmin"],
+  },
+  {
+    title: "Quizzes",
+    href: "/quizzes",
+    icon: ClipboardList,
     roles: ["admin", "superadmin"],
   },
   {
