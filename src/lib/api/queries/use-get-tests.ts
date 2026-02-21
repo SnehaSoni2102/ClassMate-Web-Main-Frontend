@@ -19,6 +19,7 @@ export interface Test {
   updatedAt: string;
   type?: "mock" | "live";
   testType?: "free" | "paid";
+  deletionAt?: string;
   __v: number;
 }
 

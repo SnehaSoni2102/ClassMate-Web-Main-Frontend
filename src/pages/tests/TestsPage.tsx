@@ -166,6 +166,7 @@ export default function TestsPage() {
                 <TableHead>+ve</TableHead>
                 <TableHead>-ve</TableHead>
                 <TableHead>Created At</TableHead>
+                <TableHead>Deletion At</TableHead>
                 <TableHead className="w-[100px]">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -216,6 +217,11 @@ export default function TestsPage() {
                   <TableCell className="text-center">{test.marksPerQuestion}</TableCell>
                   <TableCell className="text-center">{test.negativeMarks}</TableCell>
                   <TableCell className="text-center">{moment(test.createdAt).format('DD MMM YYYY')}</TableCell>
+                  <TableCell className="text-center">
+                    {test.deletionAt
+                      ? moment(test.deletionAt).format('DD MMM YYYY')
+                      : 'N/A'}
+                  </TableCell>
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
