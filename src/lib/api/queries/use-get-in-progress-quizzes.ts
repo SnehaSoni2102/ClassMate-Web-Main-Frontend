@@ -4,9 +4,10 @@ import type { GetQuizzesResponse } from "./use-get-quizzes";
 
 export const useGetInProgressQuizzes = () => {
   return useQuery<GetQuizzesResponse>({
-    queryKey: ["quiz-in-progress"],
+    // Backend endpoint spelling is intentionally "upcomming"
+    queryKey: ["quiz-upcomming"],
     queryFn: async () => {
-      const response = await api.get("/quiz/in-progress");
+      const response = await api.get("/quiz/upcomming");
       return response.data;
     },
     retry: (failureCount) => failureCount < 1,
